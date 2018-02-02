@@ -52,18 +52,29 @@ describe('test recipes', function() {
   it('should update recipie on PUT', function () {
     const updated = {name: 'fried rice', ingredients: ['rice', 'fried stuff']};
     return chai.request(app)
-    .get('/recipes')
-    .then(function(res) {
-      updated.id = res.body[0].id;
-      return chai.request(app)
-      .put(`/recipes/${updated.id}`)
-      .send(updated);
-    })
-    .then(function(res) {
-      expect(res).to.have.status(200);
-      expect(res).to.be.json;
-      expect(res.body).to.be.a('object');
-      expect(res.body).to.deep.equal(updated);
-    });
+      .get('/recipes')
+      .then(function(res) {
+        updated.id = res.body[0].id;
+        return chai.request(app)
+          .put(`/recipes/${updated.id}`)
+          .send(updated);
+      })
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.deep.equal(updated);
+      });
+  });
+  it('should delete recipe on DELETE', function() {
+    return chai.request(app)
+      .get('/recipes')
+      .then(function(res) {
+        return chai.request(app)
+          .delete(`/recipes/${res.body[0].id}`);
+      })
+      .then(function(res) {
+        expect(res).to.have.status(204);
+      });
   });
 });
