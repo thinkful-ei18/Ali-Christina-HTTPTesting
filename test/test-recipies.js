@@ -48,4 +48,22 @@ describe('test recipes', function() {
         expect(res.body).to.deep.equal(Object.assign(newRecipe, {id: res.body.id}));
       });
   });
+
+  it('should update recipie on PUT', function () {
+    const updated = {name: 'fried rice', ingredients: ['rice', 'fried stuff']};
+    return chai.request(app)
+    .get('/recipes')
+    .then(function(res) {
+      updated.id = res.body[0].id;
+      return chai.request(app)
+      .put(`/recipes/${updated.id}`)
+      .send(updated);
+    })
+    .then(function(res) {
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.deep.equal(updated);
+    });
+  });
 });
